@@ -1,0 +1,8 @@
+ticket_id,summary,type,assignee,status
+RW-1,Implement release parser for raw CSV input,Task,Arindam,To Do
+RW-2,Bug fix,Task,Arindam,In Progress
+RW-3,Misc updates and changes,Task,Arindam,To Do
+RW-4,Login button,Task,Arindam,To Do
+RW-5,Fix,Task,Arindam,To Do
+RW-6,Update stuff quickly,Task,Arindam,To Do
+RW-7,Refactor release module to support multi-source inputs,Task,Arindam,To Do
