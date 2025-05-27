@@ -15,21 +15,22 @@ class InputParser:
             return self.parse_git_log()
         else:
             raise ValueError("Unsupported file format")
-
-    def parse_jira_csv(self) -> List[Dict]:
-        entries = []
+    def parse(self):
+        parsed_data = []
         with open(self.file_path, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
-                entries.append({
+                row = {k.strip().lower(): v.strip() for k, v in row.items()}  # 🔥 THIS LINE
+                parsed_data.append({
                     "source": "jira",
-                    "ticket_id": row.get("Issue key", ""),
-                    "summary": row.get("Summary", ""),
-                    "type": row.get("Issue Type", ""),
-                    "assignee": row.get("Assignee", ""),
-                    "status": row.get("Status", "")
+                    "ticket_id": row.get("ticket_id", ""),
+                    "summary": row.get("summary", ""),
+                    "type": row.get("type", ""),
+                    "assignee": row.get("assignee", ""),
+                    "status": row.get("status", "")
                 })
-        return entries
+        return parsed_data
+
 
     def parse_git_log(self) -> List[Dict]:
         entries = []
