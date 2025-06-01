@@ -1,5 +1,13 @@
+# Byte-compiled / cache files
 __pycache__/
 *.pyc
+
+# Environment variables
 .env
+
+# IDE settings
 .idea/
 .DS_Store
+
+# Local dev test data
+sample_jira.csv
