@@ -64,6 +64,12 @@ if __name__ == "__main__":
     parser.add_argument("--input", default="release_summary.json", help="Input JSON file with release summaries")
     args = parser.parse_args()
 
+    print(f"🛠 Trying to generate output in {args.format} format...")
+
+    if not os.path.exists(args.input):
+        print(f"❌ Input file '{args.input}' not found.")
+        exit(1)
+
     with open(args.input) as f:
         data = json.load(f)
 
@@ -73,3 +79,5 @@ if __name__ == "__main__":
         format_to_markdown(data)
     elif args.format == "slack":
         format_to_slack_block(data)
+
+    print("✅ All done! Release summary formatted successfully.")
