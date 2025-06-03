@@ -1,5 +1,8 @@
 __pycache__/
 *.pyc
+release_output/
+release_summary.json
+*.save
 .env
 .idea/
 .DS_Store
