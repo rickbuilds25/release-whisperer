@@ -1,5 +1,6 @@
 import os
 import argparse
+from datetime import datetime
 from input_parser import InputParser
 from quality_guard import QualityGuard
 from summarizer_agent import SummarizerAgent
@@ -7,7 +8,7 @@ from formatter_runner import format_to_docx, format_to_markdown, format_to_slack
 
 # Constants
 SAMPLE_FILE = "sample_jira.csv"
-OUTPUT_JSON = "release_summary.json"
+RELEASE_ROOT = "release_output"
 
 
 def run_pipeline(jira_input=None, tones=["dev", "exec", "sassy"], format="docx"):
@@ -50,20 +51,27 @@ def run_pipeline(jira_input=None, tones=["dev", "exec", "sassy"], format="docx")
     print("🧠 Generating summaries...")
     summaries = SummarizerAgent().summarize_all(good_tickets, tones)
 
+    # Step 4: Prepare Output Directory
+    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+    version_folder = f"release_{timestamp}"
+    output_dir = os.path.join(RELEASE_ROOT, version_folder)
+    os.makedirs(output_dir, exist_ok=True)
+
     # Save JSON file
     import json
-    with open(OUTPUT_JSON, "w") as f:
+    summary_json_path = os.path.join(output_dir, "release_summary.json")
+    with open(summary_json_path, "w") as f:
         json.dump(summaries, f, indent=2)
-    print(f"📁 Intermediate summary saved to {OUTPUT_JSON}")
+    print(f"📁 Intermediate summary saved to {summary_json_path}")
 
-    # Step 4: Formatter
+    # Step 5: Formatter
     print(f"🎨 Formatting to {format.upper()}...")
     if format == "docx":
-        format_to_docx(summaries)
+        format_to_docx(summaries, os.path.join(output_dir, "release_summary.docx"))
     elif format == "markdown":
-        format_to_markdown(summaries)
+        format_to_markdown(summaries, os.path.join(output_dir, "release_summary.md"))
     elif format == "slack":
-        format_to_slack_block(summaries)
+        format_to_slack_block(summaries, os.path.join(output_dir, "release_slack.txt"))
     else:
         print("❌ Unknown format. Aborting.")
         return
